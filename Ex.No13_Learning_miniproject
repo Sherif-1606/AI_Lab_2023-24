@@ -1,39 +1,30 @@
-# AI-MINI-PROJECT
-# Ex.No: 13 Learning – Use Supervised Learning  
-### DATE:28/10/2025                                                                            
-### AIM: 
-To write a program to train the classifier for electric car performance and battery dataset
-###  Algorithm:
-1.Start
+AIM:
 
+To write a program to train a classifier for electric car performance using the electric car battery and specifications dataset.
 
-2.Load the dataset
+Algorithm:
 
+Start
 
-3.Create target variable
+Load the dataset
 
+Create the target variable (performance class)
 
-4.Select useful futures
+Select useful features
 
+Encode categorical variables
 
-5.encode categorical data
+Split the dataset into training and testing sets
 
+Normalize the feature data
 
-6.Split the dataset
+Train the classifier using a supervised learning algorithm
 
+Evaluate the model using accuracy, classification report, and confusion matrix
 
-7.Normalise data
+Stop
 
-
-8.Train the classifier
-
-
-9.Evaluate the model
-
-
-10.Stop
-### Program:
-```
+Program:
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler
@@ -41,8 +32,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 # Load dataset
-data = pd.read_csv("/mnt/data/electric_vehicles_spec_2025.csv.csv")
+data = pd.read_csv("/mnt/data/electric_vehicles_spec_2025.csv")
 
+# Function to categorize performance
 def categorize_performance(row):
     if row['top_speed_kmh'] >= 200 and row['acceleration_0_100_s'] <= 5.0:
         return 'High'
@@ -51,11 +43,13 @@ def categorize_performance(row):
     else:
         return 'Low'
 
+# Create target variable
 data['performance_class'] = data.apply(categorize_performance, axis=1)
 
 print("Class distribution:")
 print(data['performance_class'].value_counts())
 
+# Select features
 features = [
     'top_speed_kmh', 'battery_capacity_kWh', 'torque_nm',
     'efficiency_wh_per_km', 'range_km', 'acceleration_0_100_s',
@@ -64,6 +58,7 @@ features = [
 
 df = data[features + ['performance_class']].dropna()
 
+# Encode categorical columns
 label_encoders = {}
 for col in ['drivetrain', 'segment', 'car_body_type']:
     le = LabelEncoder()
@@ -73,30 +68,34 @@ for col in ['drivetrain', 'segment', 'car_body_type']:
 X = df.drop('performance_class', axis=1)
 y = df['performance_class']
 
-# Encode target
+# Encode target variable
 target_encoder = LabelEncoder()
 y = target_encoder.fit_transform(y)
 
+# Train-test split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
+# Normalize the features
 scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
+# Train classifier
 model = RandomForestClassifier(n_estimators=150, random_state=42)
 model.fit(X_train, y_train)
 
+# Predictions
 y_pred = model.predict(X_test)
+
+# Evaluation
 print("\nModel Accuracy:", accuracy_score(y_test, y_pred))
 print("\nClassification Report:\n", classification_report(y_test, y_pred, target_names=target_encoder.classes_))
 print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred))
 
+Output:
 
-```
+(Place your screenshots here)
 
-### Output:
-<img width="626" height="96" alt="Screenshot 2025-10-28 081917" src="https://github.com/user-attachments/assets/9201ab95-81a8-4c86-a520-52e07056f007" />
-<img width="606" height="429" alt="Screenshot 2025-10-28 081941" src="https://github.com/user-attachments/assets/4be9fb35-73c4-4cfc-9034-43a1ce35168b" />
+Result:
 
-### Result:
-Thus the system was trained successfully and the prediction was carried out.
+Thus, the system was trained successfully and the prediction for electric car performance classification was completed.
